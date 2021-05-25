@@ -6,7 +6,7 @@ function listener(){
 
     let previousAuth = currentAuth;
     //TODO update current auth terlepas dari adanya update/tidak
-    let currentAuth = store.getState().auth;
+    currentAuth = store.getState().auth;
 
     //cek apakah adanya perubahan nilai auth, bisa di compare karena merupakan string JSON
     if(currentAuth !== previousAuth){

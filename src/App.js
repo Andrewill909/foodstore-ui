@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import store from "./app/store";
 
 //import listener funct
-import listen from './app/listener';
+import {listen} from './app/listener';
 
 function App() {
 
