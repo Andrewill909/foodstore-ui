@@ -3,6 +3,7 @@ import { HashRouter as Router, Route, Switch } from "react-router-dom";
 import "upkit/dist/style.min.css";
 //component
 import Home from "./pages/Home";
+import Register from "./pages/Register";
 //redux
 import { Provider } from "react-redux";
 import store from "./app/store";
@@ -20,6 +21,7 @@ function App() {
     <Provider store={store}>
       <Router>
         <Switch>
+          <Route path="/register" component={Register} />
           <Route path="/" component={Home} />
         </Switch>
       </Router>
