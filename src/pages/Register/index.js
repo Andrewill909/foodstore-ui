@@ -1,10 +1,14 @@
 import * as React from 'react';
 import {LayoutOne, Card, FormControl, InputText, InputPassword, Button} from 'upkit';
+import {useHistory, Link} from 'react-router-dom';
 
 import {useForm} from 'react-hook-form';
 
 import {rules} from './validation';
 import {register_user} from '../../api/auth';
+
+//component
+import StoreLogo from '../../components/StoreLogo';
 
 //TODO tracking status
 const statusList = {
@@ -16,9 +20,11 @@ const statusList = {
 
 export default function Register(){
 
-    let {register, handleSubmit, formState: {errors}, setError} = useForm();
+    let {register, handleSubmit, formState: {errors}, setError} = useForm({mode: 'all'});
 
     let [status, setStatus] = React.useState(statusList.idle);
+
+    let history = useHistory();
 
     const onSubmit =  async (formData) => {
 
@@ -42,14 +48,22 @@ export default function Register(){
             })
 
             setStatus(statusList.error);
+            return;
         }
 
         setStatus(statusList.success);
+
+        history.push('/register/berhasil');
     }
 
     return(
         <LayoutOne size="small">
             <Card color="white">
+
+                <div className="text-center mb-5">
+                    <StoreLogo />
+                </div>
+
                 <form onSubmit={handleSubmit(onSubmit)}>
 
                     <FormControl errorMessage={errors.full_name?.message}>
@@ -91,10 +105,14 @@ export default function Register(){
                     </FormControl>
 
                     <Button size="large" fitContainer disabled={status === statusList.process}>
-                        {status === statusList.process ? "sedang memproses" : "mendaftar"}
+                        {status === statusList.process ? "Sedang memproses" : "Mendaftar"}                
                     </Button>
                     
                 </form>
+
+                <div className="text-center mt-2">
+                    Sudah punya akun? <Link to="/login"><b>Masuk Sekarang</b></Link>
+                </div>
             </Card>
         </LayoutOne>
     )
