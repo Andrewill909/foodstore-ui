@@ -32,11 +32,12 @@ export default function Register(){
         let {password, password_confirmation} = formData;
 
         if(password !== password_confirmation){
-            return setError('password_confirmation', {type: 'equality', message: 'Konfirmasi password harus sama dengan password'})
+            setError('password_confirmation', {type: 'equality', message: 'Konfirmasi password harus sama dengan password'})
+            return;
         }
 
         setStatus(statusList.process);
-        
+              
         let resp = await register_user(formData);
         // console.log(resp);
 
@@ -51,10 +52,15 @@ export default function Register(){
             return;
         }
 
-        setStatus(statusList.success);
-
+        setStatus(statusList.success);          
+        
         history.push('/register/berhasil');
+  
     }
+
+    React.useEffect(() => {
+        console.log(status);
+    },[status])
 
     return(
         <LayoutOne size="small">

@@ -72,7 +72,7 @@ export default function Login(){
                         />
                     </FormControl>
 
-                    <FormControl>
+                    <FormControl errorMessage={errors.password?.message}>
                         <InputPassword
                             placeholder="Password"
                             name="password"
