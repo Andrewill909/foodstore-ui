@@ -39,7 +39,7 @@ export default function Register(){
         setStatus(statusList.process);
               
         let resp = await register_user(formData);
-        // console.log(resp);
+
 
         if(resp.data.error){
             let fields = Object.keys(resp.data.fields);
@@ -57,10 +57,6 @@ export default function Register(){
         history.push('/register/berhasil');
   
     }
-
-    React.useEffect(() => {
-        console.log(status);
-    },[status])
 
     return(
         <LayoutOne size="small">

@@ -59,3 +59,50 @@ export const successFetchingProduct = ({data, count}) => {
         count
     }
 }
+
+export const setPage = (number = 1) => {
+    return {
+        type: SET_PAGE,
+        currentPage: number
+    }
+}
+
+export const setKeyword = (keyword) => {
+    return {
+        type: SET_KEYWORD,
+        keyword
+    }
+}
+
+export const setCategory = (category) => {
+    return {
+        type: SET_CATEGORY,
+        category
+    }
+}
+
+export const setTags = (tags) => {
+    return {
+        type: SET_TAGS,
+        tags
+    }
+}
+
+export const toggleTag = (tag) => {
+    return {
+        type: TOGGLE_TAG,
+        tag
+    }
+}
+
+export const goToNextPage = () => {
+    return {
+        type: NEXT_PAGE
+    }
+}
+
+export const goToPrevPage = () => {
+    return {
+        type: PREV_PAGE
+    }
+}
