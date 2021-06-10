@@ -5,6 +5,7 @@ import {config} from '../../config'
 //components
 import {SideNav, LayoutSidebar, Responsive, CardProduct, Pagination, InputText, Pill} from 'upkit';
 import TopBar from '../../components/TopBar';
+import Cart from '../../components/Cart'
 //redux
 import {useDispatch, useSelector} from 'react-redux';
 //actions
@@ -15,7 +16,9 @@ import BounceLoader from 'react-spinners/BounceLoader';
 export default function Home(){
 
     let dispatch = useDispatch();
+
     let products = useSelector(state => state.products);
+    let cart = useSelector(state => state.cart);
 
     React.useEffect(() => {
         dispatch(fetchProducts());
@@ -95,7 +98,11 @@ export default function Home(){
                     </div>    
 
                 </div>
-                <div className="w-full md:w-1/4 h-full shadow-lg border-r border-white bg-gray-100">Keranjang belanja disini</div>
+
+                {/* keranjang belanja */}
+                <div className="w-full md:w-1/4 h-full shadow-lg border-r border-white bg-gray-100">
+                        <Cart items={cart} />
+                </div>
             </div>
         }
             sidebarSize={80}

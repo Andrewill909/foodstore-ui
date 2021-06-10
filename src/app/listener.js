@@ -1,16 +1,31 @@
 import store from './store';
+import {saveCart} from '../api/cart';
 
 let currentAuth;
+let currentCart;    
 
 function listener(){
 
     let previousAuth = currentAuth;
+    let previousCart = currentCart;
+
     //TODO update current auth terlepas dari adanya update/tidak
     currentAuth = store.getState().auth;
+    currentCart = store.getState().cart;
 
-    //cek apakah adanya perubahan nilai auth, bisa di compare karena merupakan string JSON
-    if(currentAuth !== previousAuth){
+    let {token} = currentAuth;
+
+    if(JSON.stringify(currentAuth) !== JSON.stringify(previousAuth)){
         localStorage.setItem('auth', JSON.stringify(currentAuth));
+
+        saveCart(token, currentCart);
+    }
+
+    if(currentCart !== previousCart){
+        localStorage.setItem('cart', JSON.stringify(currentCart));
+
+        saveCart(token, currentCart);
+
     }
 }
 

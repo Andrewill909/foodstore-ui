@@ -11,6 +11,7 @@ import Login from './pages/Login';
 //redux
 import { Provider } from "react-redux";
 import store from "./app/store";
+import {getCart} from './api/cart';
 
 //import listener funct
 import {listen} from './app/listener';
@@ -19,6 +20,7 @@ function App() {
 
   React.useEffect(() => {
     listen();
+    getCart();
   }, []);
 
   return (
