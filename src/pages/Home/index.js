@@ -2,6 +2,7 @@ import * as React from 'react';
 import menus from './menus';
 import {tags} from './tags';
 import {config} from '../../config'
+import {useHistory} from 'react-router-dom';
 //components
 import {SideNav, LayoutSidebar, Responsive, CardProduct, Pagination, InputText, Pill} from 'upkit';
 import TopBar from '../../components/TopBar';
@@ -10,15 +11,17 @@ import Cart from '../../components/Cart'
 import {useDispatch, useSelector} from 'react-redux';
 //actions
 import {fetchProducts, setPage, goToNextPage, goToPrevPage, setKeyword, setCategory, toggleTag} from '../../features/Products/action';
+import {addItem, removeItem} from '../../features/Cart/action';
 
 import BounceLoader from 'react-spinners/BounceLoader';
 
 export default function Home(){
 
     let dispatch = useDispatch();
-
+    
     let products = useSelector(state => state.products);
     let cart = useSelector(state => state.cart);
+    let history = useHistory();
 
     React.useEffect(() => {
         dispatch(fetchProducts());
@@ -79,7 +82,7 @@ export default function Home(){
                                     title={product.name}
                                     imgUrl={`${config.api_host}/upload/${product.image_url}`}
                                     price={product.price}
-                                    onAddToCart={_ => null}
+                                    onAddToCart={_ => dispatch(addItem(product))}
                                 />
                             </div>
                         })}
@@ -100,8 +103,13 @@ export default function Home(){
                 </div>
 
                 {/* keranjang belanja */}
-                <div className="w-full md:w-1/4 h-full shadow-lg border-r border-white bg-gray-100">
-                        <Cart items={cart} />
+                <div className={`w-full md:w-1/4 h-full shadow-lg border-r border-white bg-gray-100 ${cart.length? '' : 'flex items-center justify-center'}`}>
+                        <Cart 
+                            items={cart} 
+                            onItemInc={item => dispatch(addItem(item))} 
+                            onItemDec={item => dispatch(removeItem(item))}
+                            onCheckout={_ => history.push("/checkout")}
+                        />
                 </div>
             </div>
         }
