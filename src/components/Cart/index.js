@@ -3,12 +3,18 @@ import * as React from 'react';
 import {arrayOf, string, shape, oneOfType, number, func} from 'prop-types';
 
 //styling
-import {CardItem, Button} from 'upkit';
+import {CardItem, Button, Text} from 'upkit';
 import {config} from '../../config';
 import FaArrowRight from '@meronex/icons/fa/FaArrowRight';
 import FaCartPlus from '@meronex/icons/fa/FaCartPlus';
 
+//utils
+import {sumPrice} from '../../utils/sum-price';
+import { formatRupiah } from '../../utils/format-rupiah';
+
 export default function Cart({items, onItemInc, onItemDec, onCheckout}){
+
+    let total = sumPrice(items);
 
     return (<div >
 
@@ -22,6 +28,7 @@ export default function Cart({items, onItemInc, onItemDec, onCheckout}){
                 </div>
             </div>
 
+            <Text as="h5">Total: {formatRupiah(total)}</Text>
             {/* Button checkout */}
             <Button 
                 text="Checkout"
