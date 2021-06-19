@@ -6,7 +6,7 @@ export async function getAddress(params){
     let {token} = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : {};
     let skip = params.page * params.limit - params.limit;
 
-    return axios.get(`${config.api_host}/api/delivery-addresses`, {
+    return await axios.get(`${config.api_host}/api/delivery-addresses`, {
         params: {
             limit: params.limit,
             skip
