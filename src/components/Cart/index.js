@@ -45,7 +45,7 @@ export default function Cart({items, onItemInc, onItemDec, onCheckout}){
         {/* item cart */}
         <div className="p-2">
             {items.map((item, index) => {
-                return (<div className="mb-2">
+                return (<div key={index} className="mb-2">
                     <CardItem
                         imgUrl={`${config.api_host}/upload/${item.image_url}`}
                         name={item.name}

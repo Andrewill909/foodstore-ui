@@ -8,6 +8,8 @@ import Register from "./pages/Register";
 import RegisterSuccess from './pages/RegisterSuccess';
 import Login from './pages/Login';
 import UserAddressAdd from "./pages/UserAddressAdd";
+import UserAddress from "./pages/UserAddress";
+import Checkout from "./pages/Checkout";
 
 //redux
 import { Provider } from "react-redux";
@@ -32,6 +34,8 @@ function App() {
           <Route path="/register/berhasil" component={RegisterSuccess} />
           <Route path="/register" component={Register} />
           <Route path="/alamat-pengiriman/tambah" component={UserAddressAdd} />
+          <Route path="/alamat-pengiriman/" component={UserAddress} />
+          <Route path="/checkout" component={Checkout} />
           <Route path="/" component={Home} />
         </Switch>
       </Router>
