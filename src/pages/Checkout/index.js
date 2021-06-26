@@ -1,6 +1,7 @@
 import * as React from "react";
+import {Link} from 'react-router-dom';
 //ui
-import { LayoutOne, Text, Steps, Table, Button } from "upkit";
+import { LayoutOne, Text, Steps, Table, Button, Responsive } from "upkit";
 //component
 import TopBar from "../../components/TopBar";
 //icons
@@ -8,12 +9,16 @@ import FaCartPlus from "@meronex/icons/fa/FaCartPlus";
 import FaAddressCard from "@meronex/icons/fa/FaAddressCard";
 import FaInfoCircle from "@meronex/icons/fa/FaInfoCircle";
 import FaArrowRight from '@meronex/icons/fa/FaArrowRight';
+import FaArrowLeft from '@meronex/icons/fa/FaArrowLeft';
+import FaRegCheckCircle from '@meronex/icons/fa/FaRegCheckCircle';
 //redux
 import {useSelector} from 'react-redux';
 //misc
 import { config } from '../../config';
 import {formatRupiah} from '../../utils/format-rupiah';
 import {sumPrice} from '../../utils/sum-price';
+//hooks
+import { useAddressData } from "../../hooks/address";
 
 const IconWrapper = ({ children }) => {
   return <div className="text-3xl flex justify-center">{children}</div>;
@@ -73,11 +78,31 @@ const columns = [
         }
 
     }
+];
+
+const addressColumns = [
+  {
+    Header: 'Nama alamat',
+    accessor: alamat => {
+      return <div>
+        {alamat.nama}
+        <br/>
+        <small>{alamat.provinsi}, {alamat.kabupaten}, {alamat.kecamatan}, {alamat.kelurahan}
+        <br/>
+        {alamat.detail}
+        </small>       
+      </div>
+    }
+  }
 ]
 
 export default function Checkout() {
   let [activeStep, setActiveStep] = React.useState(0);
+  //cart (menu 1)
   let cart = useSelector(state => state.cart);
+  // address (menu 2)
+  let {data, status, limit, page, count, setPage} = useAddressData();
+  let [selectedAddress, setSelectedAddress] = React.useState(null);
 
   return (
     <LayoutOne>
@@ -86,7 +111,8 @@ export default function Checkout() {
         <br/>
       <Steps steps={steps} active={activeStep} />
       
-      {activeStep===0 ? 
+      {/* active menu cart*/}
+      {activeStep === 0 ? 
       <div>
           <br/><br/>
           <Table
@@ -109,7 +135,108 @@ export default function Checkout() {
           >Selanjutnya</Button>
       </div> : null}
 
-      
+
+      {/* active menu address */}
+      {activeStep === 1 ? 
+      <div>
+        <br/><br/>
+        <Table
+          items={data}
+          columns={addressColumns}
+          perPage={limit}
+          page={page}
+          onPageChange={page => setPage(page)}
+          totalItems={count}
+          isLoading={status === 'process'}
+          selectable
+          primaryField={'_id'}
+          selectedRow={selectedAddress}
+          onSelectRow={item => setSelectedAddress(item)}
+        />
+        {!data.length && status === 'success'? 
+          <div className="text-center my-10">
+            <Link to="alamat-pengiriman/tambah">
+              Kamu belum memiliki alamat pengiriman
+              <br/><br/>
+              <Button>Tambah alamat</Button>
+            </Link>
+          </div>: null
+        }
+        <br/><br/>
+        <Responsive desktop={2} tablet={2} mobile={2}>
+          <div>
+            <Button
+              onClick={_ => setActiveStep(activeStep-1)}
+              color="gray"
+              iconBefore={<FaArrowLeft/>}
+            >
+              Sebelumnya
+            </Button>
+          </div>
+          <div className="text-right">
+            <Button
+              onClick={_ => setActiveStep(activeStep+1)}
+              disabled={!selectedAddress}
+              iconAfter={<FaArrowRight/>}
+            >
+              Selanjutnya
+            </Button>
+          </div>
+        </Responsive>
+      </div>
+      : null}
+
+      {/* active menu konfirmasi */}
+      {activeStep === 2 ?
+      <div>
+        <br/><br/>
+        <Table     
+          columns={[
+            {
+              Header: '',
+              accessor: 'label'
+            },
+            {
+              Header: '',
+              accessor: 'value'
+            }
+          ]}    
+
+          items={[
+            {label: 'Alamat', value: <div>
+              {selectedAddress.nama}<br/>
+              {selectedAddress.provinsi}, {selectedAddress.kabupaten}, {selectedAddress.kecamatan}, {selectedAddress.kelurahan} <br/>
+              {selectedAddress.detail}
+            </div>},
+            {label: 'Subtotal', value: formatRupiah(sumPrice(cart))},
+            {label: 'Ongkir', value: formatRupiah(config.global_ongkir)},
+            {label: 'Total', value: <b>{formatRupiah(sumPrice(cart) + parseInt(config.global_ongkir))}</b>}
+          ]}
+          showPagination={false}
+        />
+        <br/><br/>
+        <Responsive desktop={2} tablet={2} mobile={2}>
+          <div>
+            <Button
+              onClick={_ => setActiveStep(activeStep-1)}
+              color="gray"
+              iconBefore={<FaArrowRight/>}
+            >
+              Sebelumnya
+            </Button>
+          </div>
+          <div className="text-right">
+            <Button
+              color="red"
+              size="large"
+              iconBefore={<FaRegCheckCircle/>}
+            >
+              Bayar
+            </Button>
+          </div>
+        </Responsive>
+      </div>
+      : null}
     </LayoutOne>
   );
 }
