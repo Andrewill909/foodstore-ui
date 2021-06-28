@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Link} from 'react-router-dom';
+import {Link, useHistory, Redirect} from 'react-router-dom';
 //ui
 import { LayoutOne, Text, Steps, Table, Button, Responsive } from "upkit";
 //component
@@ -12,13 +12,16 @@ import FaArrowRight from '@meronex/icons/fa/FaArrowRight';
 import FaArrowLeft from '@meronex/icons/fa/FaArrowLeft';
 import FaRegCheckCircle from '@meronex/icons/fa/FaRegCheckCircle';
 //redux
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import { clearItems } from "../../features/Cart/action";
 //misc
 import { config } from '../../config';
 import {formatRupiah} from '../../utils/format-rupiah';
 import {sumPrice} from '../../utils/sum-price';
 //hooks
 import { useAddressData } from "../../hooks/address";
+//api
+import {createOrder} from '../../api/order';
 
 const IconWrapper = ({ children }) => {
   return <div className="text-3xl flex justify-center">{children}</div>;
@@ -103,6 +106,29 @@ export default function Checkout() {
   // address (menu 2)
   let {data, status, limit, page, count, setPage} = useAddressData();
   let [selectedAddress, setSelectedAddress] = React.useState(null);
+  //redirect
+  let history = useHistory();
+  let dispatch = useDispatch();
+
+  //create order
+  async function handleCreateOrder(){
+    let payload = {
+      delivery_fee: config.global_ongkir,
+      delivery_address: selectedAddress._id
+    }
+
+    let {data} = await createOrder(payload);
+    //check error
+    if(data?.error) return;
+    //no error
+    history.push(`/invoice/${data._id}`);
+    //clear cart on redux
+    dispatch(clearItems());
+  }
+
+  if(!cart.length){
+    return <Redirect to="/" />
+  }
 
   return (
     <LayoutOne>
@@ -227,6 +253,7 @@ export default function Checkout() {
           </div>
           <div className="text-right">
             <Button
+              onClick={handleCreateOrder}
               color="red"
               size="large"
               iconBefore={<FaRegCheckCircle/>}
