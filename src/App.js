@@ -11,6 +11,7 @@ import UserAddressAdd from "./pages/UserAddressAdd";
 import UserAddress from "./pages/UserAddress";
 import Checkout from "./pages/Checkout";
 import Invoice from "./pages/Invoice";
+import UserAccount from './pages/UserAccount';
 
 //redux
 import { Provider } from "react-redux";
@@ -38,6 +39,7 @@ function App() {
           <Route path="/alamat-pengiriman/" component={UserAddress} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/invoice/:order_id" component={Invoice} />
+          <Route path="/account" component={UserAccount} />
           <Route path="/" component={Home} />
         </Switch>
       </Router>

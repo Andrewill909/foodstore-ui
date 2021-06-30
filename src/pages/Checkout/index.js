@@ -119,7 +119,10 @@ export default function Checkout() {
 
     let {data} = await createOrder(payload);
     //check error
-    if(data?.error) return;
+    if(data?.error){
+      console.log(JSON.stringify(data));
+      return;
+    }
     //no error
     history.push(`/invoice/${data._id}`);
     //clear cart on redux

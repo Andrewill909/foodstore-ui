@@ -4,8 +4,14 @@ import { useRouteMatch } from 'react-router-dom';
 import {LayoutOne, Text, Table} from 'upkit';
 import TopBar from '../../components/TopBar';
 import { BounceLoader } from 'react-spinners';
+//component
+import StatusLabel from '../../components/StatusLabel';
 //api
 import { getInvoiceByOrderId } from '../../api/invoice';
+//util
+import {formatRupiah} from '../../utils/format-rupiah';
+import {config} from '../../config';
+
 
 export default function Invoice(){
     let [invoice, setInvoice] = React.useState(null);
@@ -47,5 +53,42 @@ export default function Invoice(){
         )
     }
 
-    return <div></div>
+    return (
+        <LayoutOne>
+            <TopBar/>
+            <Text as="h3">Invoice</Text>
+            <br/>
+
+            <Table
+                showPagination={false}
+                items={[
+                    {label: 'Status', value: <StatusLabel status={invoice?.payment_status} />},
+                    {label: 'Order ID', value: `#${invoice?.order?.order_number}`},
+                    {label: 'Total amount', value: formatRupiah(invoice?.total)},
+                    {label: 'Billed to', value: <div>
+                        <b>{invoice?.user?.full_name}</b>
+                        <br/>
+                        {invoice?.user?.email}<br/><br/>
+                        {invoice?.delivery_address?.detail}<br/>
+                        {invoice?.delivery_address?.kelurahan},
+                        {invoice?.delivery_address?.kecamatan}<br/>
+                        {invoice?.delivery_address?.kabupaten} <br/>
+                        {invoice?.delivery_address?.provinsi}
+                    </div>},
+                    {label: 'Payment to', value: <div>
+                        {config.owner} <br/>
+                        {config.contact} <br/>
+                        {config.billing.account_no} <br/>
+                        {config.billing.bank_name}
+                    </div>}
+                ]}
+                columns={[
+                    {Header: 'Invoice', accessor: 'label'},
+                    {Header: '', accessor: 'value'}
+                ]}
+            >
+
+            </Table>
+        </LayoutOne>
+    )
 }
