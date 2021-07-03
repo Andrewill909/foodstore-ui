@@ -13,6 +13,10 @@ import Checkout from "./pages/Checkout";
 import Invoice from "./pages/Invoice";
 import UserAccount from './pages/UserAccount';
 import UserOrders from "./pages/UserOrders";
+import Logout from "./pages/Logout";
+//guard component
+import GuardRoute from './components/GuardRoute';
+import GuestRouteOnly from "./components/GuestRouteOnly";
 
 //redux
 import { Provider } from "react-redux";
@@ -33,15 +37,16 @@ function App() {
     <Provider store={store}>
       <Router>
         <Switch>
-          <Route path="/login" component={Login} />
-          <Route path="/register/berhasil" component={RegisterSuccess} />
-          <Route path="/register" component={Register} />
-          <Route path="/alamat-pengiriman/tambah" component={UserAddressAdd} />
-          <Route path="/alamat-pengiriman/" component={UserAddress} />
-          <Route path="/checkout" component={Checkout} />
-          <Route path="/invoice/:order_id" component={Invoice} />
-          <Route path="/account" component={UserAccount} />
-          <Route path="/pesanan" component={UserOrders} />
+          <GuestRouteOnly path="/login" component={Login} />
+          <GuestRouteOnly path="/register/berhasil" component={RegisterSuccess} />
+          <GuestRouteOnly path="/register" component={Register} />
+          <GuardRoute path="/alamat-pengiriman/tambah" component={UserAddressAdd} />
+          <GuardRoute path="/alamat-pengiriman/" component={UserAddress} />
+          <GuardRoute path="/checkout" component={Checkout} />
+          <GuardRoute path="/invoice/:order_id" component={Invoice} />
+          <GuardRoute path="/account" component={UserAccount} />
+          <GuardRoute path="/pesanan" component={UserOrders} />
+          <Route path="/logout" component={Logout} />
           <Route path="/" component={Home} />
         </Switch>
       </Router>

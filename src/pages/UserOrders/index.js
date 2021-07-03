@@ -12,12 +12,13 @@ import { sumPrice } from '../../utils/sum-price';
 import FaFileInvoiceDollar from '@meronex/icons/fa/FaFileInvoiceDollar';
 //api
 import { getOrders } from '../../api/order';
-import axios from 'axios';
+
 
 const columns = [
     {Header: '', id: 'Status', accessor: order => {
         return <div>
             #{order.order_number} <br/>
+            <StatusLabel status={order.status}/>
         </div>
     }},
     {Header: 'Items', accessor: order => {
@@ -50,7 +51,7 @@ export default function UserOrders(){
     let [count, setCount] = React.useState(0);
     let [status, setStatus] = React.useState('idle');
     let [page, setPage] = React.useState(1);
-    let [limit, setLimit] = React.usestate(10);
+    let [limit,] = React.useState(10);
 
     const fetchPesanan = React.useCallback(async () => {
         setStatus('process');
@@ -64,6 +65,7 @@ export default function UserOrders(){
 
         setStatus('success');
         setPesanan(data.data);
+       
         setCount(data.count);
     }, [page, limit]);
 

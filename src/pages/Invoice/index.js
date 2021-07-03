@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { useRouteMatch } from 'react-router-dom';
 //ui
-import {LayoutOne, Text, Table} from 'upkit';
+import {LayoutOne, Text, Table, Button} from 'upkit';
 import TopBar from '../../components/TopBar';
 import { BounceLoader } from 'react-spinners';
 //component
 import StatusLabel from '../../components/StatusLabel';
 //api
 import { getInvoiceByOrderId } from '../../api/invoice';
+import axios from 'axios';
 //util
 import {formatRupiah} from '../../utils/format-rupiah';
 import {config} from '../../config';
@@ -17,8 +18,27 @@ export default function Invoice(){
     let [invoice, setInvoice] = React.useState(null);
     let [error, setError] = React.useState('');
     let [status, setStatus] = React.useState('process');
+    //payment midtrans
+    let [initiatingPayment, setInitiaing] = React.useState(false);
+    let [requestError, setRequestError] = React.useState(false);
 
     let {params} = useRouteMatch();
+
+    //midtrans payment
+    let handlePayment = async () => {
+        setInitiaing(true);
+
+        let {data} = await axios.get(`${config.api_host}/api/invoices/${params?.order_id}/initiate_payment`);
+        console.log(data);
+        if(!data.token){
+            setRequestError(true);
+            alert('error');
+            return;
+        }
+        //process completed
+        setInitiaing(true);
+        window.snap.pay(data.token);
+    }
 
     React.useEffect(() => {
         getInvoiceByOrderId(params?.order_id)
@@ -89,6 +109,13 @@ export default function Invoice(){
             >
 
             </Table>
+            {invoice.payment_status !== 'paid' ? 
+            <Button
+                onClick={handlePayment}
+                disabled={initiatingPayment}
+            >
+                {initiatingPayment ? "Loading..." : "Bayar dengan midtrans"}
+            </Button> : null}
         </LayoutOne>
     )
 }
