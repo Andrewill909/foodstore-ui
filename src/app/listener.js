@@ -15,7 +15,7 @@ function listener(){
 
     let {token} = currentAuth;
 
-    if(JSON.stringify(currentAuth) !== JSON.stringify(previousAuth)){
+    if(currentAuth !== previousAuth){
         localStorage.setItem('auth', JSON.stringify(currentAuth));
 
         saveCart(token, currentCart);

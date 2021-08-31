@@ -13,8 +13,9 @@ export default function Logout(){
 
     React.useEffect(() => {
         logout()
-            .then(() => dispatch(userLogout))
-            .then(() => history.push('/'))   
+            .then(() => dispatch(userLogout()))
+            .then(() => history.push('/'))
+                 
     }, [dispatch, history]);
 
     return (

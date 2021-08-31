@@ -19,14 +19,14 @@ export default function Invoice(){
     let [error, setError] = React.useState('');
     let [status, setStatus] = React.useState('process');
     //payment midtrans
-    let [initiatingPayment, setInitiaing] = React.useState(false);
-    let [requestError, setRequestError] = React.useState(false);
+    let [initiatingPayment, setInitiating] = React.useState(false);
+    let [, setRequestError] = React.useState(false);
 
     let {params} = useRouteMatch();
 
     //midtrans payment
     let handlePayment = async () => {
-        setInitiaing(true);
+        setInitiating(true);
 
         let {data} = await axios.get(`${config.api_host}/api/invoices/${params?.order_id}/initiate_payment`);
         console.log(data);
@@ -36,7 +36,7 @@ export default function Invoice(){
             return;
         }
         //process completed
-        setInitiaing(true);
+        setInitiating(true);
         window.snap.pay(data.token);
     }
 
